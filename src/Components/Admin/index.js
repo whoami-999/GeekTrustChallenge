@@ -24,14 +24,22 @@ class Admin extends Component {
     } else if (role === "") {
       role = usersList[id].role;
     }
-    const b = {
+    const updatedUser = {
       id: id,
       name: name,
       email: email,
       role: role,
     };
-    console.log(b);
-    usersList[id] = b;
+
+    const updatedUsersList = usersList.map(function (each) {
+      if (each.id === id) {
+        each = updatedUser;
+        return each;
+      } else {
+        return each;
+      }
+    });
+    this.setState({ usersList: updatedUsersList });
   };
 
   deleteItem = (value) => {
