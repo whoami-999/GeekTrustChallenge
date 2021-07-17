@@ -1,0 +1,33 @@
+.search-bar {
+  color: black;
+  width: 90vw;
+  height: 35px;
+}
+.search-bar-container {
+  text-align: center;
+}
+.checkbox {
+  width: 20px;
+  height: 20px;
+}
+.heading {
+  color: #0aa84f;
+  font-size: 24px;
+  min-width: 150px;
+  font-weight: bold;
+}
+
+.user-list-container {
+  list-style-type: none;
+}
+.user-list-item {
+  display: flex;
+  justify-content: space-between;
+  width: 90vw;
+  align-items: center;
+}
+.line {
+  border: 1px white solid;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
