@@ -10,6 +10,8 @@ const editIcon =
 class DisplayUser extends Component {
   state = { isClickOnEdit: false, name: "", email: "", role: "" };
 
+  componentDidMount() {}
+
   name = (event) => {
     this.setState({ name: event.target.value });
   };

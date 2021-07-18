@@ -1,10 +1,20 @@
 import { Component } from "react";
-import Pagination from "react-js-pagination";
+import ReactPaginate from "react-paginate";
+
 import DisplayUser from "../DisplayUser";
 import "./index.css";
 
 class Admin extends Component {
-  state = { usersList: [] };
+  constructor(props) {
+    super(props);
+    this.state = {
+      offset: 0,
+      usersList: [],
+      perPage: 10,
+      currentPage: 0,
+    };
+    this.handlePageClick = this.handlePageClick.bind(this);
+  }
 
   componentDidMount() {
     this.renderUsersData();
@@ -15,6 +25,15 @@ class Admin extends Component {
 
     if (name === "" && email === "" && role === "") {
       name = usersList[id].name;
+      email = usersList[id].email;
+      role = usersList[id].role;
+    } else if (name === "" && email === "") {
+      name = usersList[id].name;
+      email = usersList[id].email;
+    } else if (name === "" && role === "") {
+      name = usersList[id].name;
+      role = usersList[id].role;
+    } else if (email === "" && role === "") {
       email = usersList[id].email;
       role = usersList[id].role;
     } else if (name === "") {
@@ -45,7 +64,16 @@ class Admin extends Component {
   deleteItem = (value) => {
     const { usersList } = this.state;
     const updatedList = usersList.filter((each) => each.id !== value);
-    this.setState({ usersList: updatedList });
+
+    const slice = updatedList.slice(
+      this.state.offset,
+      this.state.offset + this.state.perPage
+    );
+
+    this.setState({
+      usersList: slice,
+      pageCount: Math.ceil(updatedList.length / this.state.perPage),
+    });
   };
 
   renderUsersData = async () => {
@@ -56,7 +84,29 @@ class Admin extends Component {
     const usersListResponse = await fetch(getUsersApi, options);
     const usersListData = await usersListResponse.json();
 
-    this.setState({ usersList: usersListData });
+    const slice = usersListData.slice(
+      this.state.offset,
+      this.state.offset + this.state.perPage
+    );
+    this.setState({
+      usersList: slice,
+      pageCount: Math.ceil(usersListData.length / this.state.perPage),
+    });
+  };
+
+  handlePageClick = (e) => {
+    const selectedPage = e.selected;
+    const offset = selectedPage * this.state.perPage;
+
+    this.setState(
+      {
+        currentPage: selectedPage,
+        offset: offset,
+      },
+      () => {
+        this.renderUsersData();
+      }
+    );
   };
 
   render() {
@@ -87,6 +137,21 @@ class Admin extends Component {
             />
           ))}
         </ul>
+        <div className="page-container">
+          <ReactPaginate
+            previousLabel={"prev"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={this.state.pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={"pagination"}
+            subContainerClassName={"pages pagination"}
+            activeClassName={"active"}
+          />
+        </div>
       </div>
     );
   }
